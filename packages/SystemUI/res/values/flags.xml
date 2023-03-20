@@ -43,4 +43,7 @@
          protected. -->
     <bool name="flag_battery_shield_icon">false</bool>
 
+    <!-- Whether the Auto Pin Confirmation is enabled -->
+    <bool name="flag_auto_pin_confirmation">true</bool>
+
 </resources>

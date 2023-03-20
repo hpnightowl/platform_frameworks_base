@@ -200,7 +200,7 @@ object Flags {
     // flag for controlling auto pin confirmation and material u shapes in bouncer
     @JvmField
     val AUTO_PIN_CONFIRMATION =
-        unreleasedFlag(224, "auto_pin_confirmation", "auto_pin_confirmation")
+        resourceBooleanFlag(224, R.bool.flag_auto_pin_confirmation, "auto_pin_confirmation")
 
     // 300 - power menu
     // TODO(b/254512600): Tracking Bug
