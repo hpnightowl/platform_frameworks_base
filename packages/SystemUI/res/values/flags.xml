@@ -47,4 +47,7 @@
     <!-- Whether the Auto Pin Confirmation is enabled -->
     <bool name="flag_auto_pin_confirmation">true</bool>
 
+    <!-- Whether Region sampling feature is enabled or disabled it's text protection feature-->
+    <bool name="flag_region_sampling">true</bool>
+    
 </resources>
