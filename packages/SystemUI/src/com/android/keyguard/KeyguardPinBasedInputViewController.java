@@ -27,6 +27,7 @@ import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.KeyguardSecurityModel.SecurityMode;
 import com.android.systemui.R;
 import com.android.systemui.classifier.FalsingCollector;
+import android.annotation.CallSuper;
 
 public abstract class KeyguardPinBasedInputViewController<T extends KeyguardPinBasedInputView>
         extends KeyguardAbsKeyInputViewController<T> {
@@ -81,6 +82,7 @@ public abstract class KeyguardPinBasedInputViewController<T extends KeyguardPinB
         }
         mPasswordEntry.setOnKeyListener(mOnKeyListener);
         mPasswordEntry.setUserActivityListener(this::onUserInput);
+        mPasswordEntry.setTextChangeListener(this::onTextChanged);
 
         View deleteButton = mView.findViewById(R.id.delete_button);
         deleteButton.setOnTouchListener(mActionButtonTouchListener);
@@ -111,6 +113,14 @@ public abstract class KeyguardPinBasedInputViewController<T extends KeyguardPinB
                 }
             });
             okButton.setOnHoverListener(mLiftToActivateListener);
+        }
+    }
+
+    @CallSuper
+    protected void onTextChanged(int textLength) {
+        // since we have fixed size 5 so we can just check the length directly now
+        if (textLength == 5) {
+            verifyPasswordAndUnlock();
         }
     }
 

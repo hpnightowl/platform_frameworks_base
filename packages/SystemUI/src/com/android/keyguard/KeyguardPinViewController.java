@@ -45,7 +45,7 @@ public class KeyguardPinViewController
     @Override
     protected void onViewAttached() {
         super.onViewAttached();
-
+        
         View cancelBtn = mView.findViewById(R.id.cancel_button);
         if (cancelBtn != null) {
             cancelBtn.setOnClickListener(view -> {
