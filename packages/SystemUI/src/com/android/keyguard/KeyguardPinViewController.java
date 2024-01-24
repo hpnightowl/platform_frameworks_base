@@ -17,16 +17,18 @@
 package com.android.keyguard;
 
 import android.view.View;
-
+import android.util.Log;
 import com.android.internal.util.LatencyTracker;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.KeyguardSecurityModel.SecurityMode;
 import com.android.systemui.R;
 import com.android.systemui.classifier.FalsingCollector;
+import com.android.keyguard.PasswordTextView.QuickUnlockListener;
 
 public class KeyguardPinViewController
         extends KeyguardPinBasedInputViewController<KeyguardPINView> {
     private final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
+    private final LockPatternUtils mLockPatternUtils;
 
     protected KeyguardPinViewController(KeyguardPINView view,
             KeyguardUpdateMonitor keyguardUpdateMonitor,
@@ -40,11 +42,26 @@ public class KeyguardPinViewController
                 messageAreaControllerFactory, latencyTracker, liftToActivateListener,
                 emergencyButtonController, falsingCollector);
         mKeyguardUpdateMonitor = keyguardUpdateMonitor;
+        mLockPatternUtils = lockPatternUtils;
     }
 
     @Override
     protected void onViewAttached() {
         super.onViewAttached();
+
+        int passwordLength = mLockPatternUtils.getPinPasswordLength(
+                KeyguardUpdateMonitor.getCurrentUser());
+
+        mPasswordEntry.setQuickUnlockListener(new QuickUnlockListener() {
+            public void onValidateQuickUnlock(String password) {
+                if (password != null) {
+                    int length = password.length();
+                    if (length == passwordLength) {
+                        verifyPasswordAndUnlock();
+                    }
+                }
+            }
+        });
 
         View cancelBtn = mView.findViewById(R.id.cancel_button);
         if (cancelBtn != null) {
