@@ -17,7 +17,6 @@
 package com.android.keyguard;
 
 import android.view.View;
-
 import com.android.internal.util.LatencyTracker;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.KeyguardSecurityModel.SecurityMode;
@@ -45,7 +44,6 @@ public class KeyguardPinViewController
     @Override
     protected void onViewAttached() {
         super.onViewAttached();
-
         View cancelBtn = mView.findViewById(R.id.cancel_button);
         if (cancelBtn != null) {
             cancelBtn.setOnClickListener(view -> {

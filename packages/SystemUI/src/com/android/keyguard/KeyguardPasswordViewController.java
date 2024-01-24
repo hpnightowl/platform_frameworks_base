@@ -89,6 +89,10 @@ public class KeyguardPasswordViewController
         public void afterTextChanged(Editable s) {
             if (!TextUtils.isEmpty(s)) {
                 onUserInput();
+                // since we have fixed size 5 so we can just check the length directly now
+                if (s.length() == 5) {
+                    verifyPasswordAndUnlock();
+                }
             }
         }
     };
