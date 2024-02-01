@@ -97,7 +97,7 @@ public class LockPatternUtils {
     /**
      * The minimum size of a valid password.
      */
-    public static final int MIN_LOCK_PASSWORD_SIZE = 4;
+    public static final int MIN_LOCK_PASSWORD_SIZE = 5;
 
     /**
      * The minimum number of dots the user must include in a wrong pattern attempt for it to be

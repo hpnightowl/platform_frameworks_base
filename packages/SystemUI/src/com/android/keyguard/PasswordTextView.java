@@ -83,7 +83,7 @@ public class PasswordTextView extends View {
      */
     private static final float OVERSHOOT_TIME_POSITION = 0.5f;
 
-    private static char DOT = '\u2022';
+    private static char DOT = '\u2217';
 
     /**
      * The raw text size, will be multiplied by the scaled density when drawn
