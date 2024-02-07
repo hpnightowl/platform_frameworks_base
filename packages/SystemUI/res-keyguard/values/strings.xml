@@ -45,7 +45,7 @@
     <string name="keyguard_password_enter_pin_password_code">Type PIN to unlock</string>
 
     <!-- Instructions telling the user to enter their PIN password to unlock the keyguard [CHAR LIMIT=30] -->
-    <string name="keyguard_enter_your_pin">Enter your PIN</string>
+    <string name="keyguard_enter_your_pin">Enter PIN</string>
 
     <!-- Instructions telling the user to enter their pattern to unlock the keyguard [CHAR LIMIT=30] -->
     <string name="keyguard_enter_your_pattern">Enter your pattern</string>
@@ -154,7 +154,7 @@
     <!-- Message shown when user enters wrong password -->
     <string name="kg_wrong_password">Wrong password</string>
     <!-- Message shown when user enters wrong PIN -->
-    <string name="kg_wrong_pin">Wrong PIN</string>
+    <string name="kg_wrong_pin">Incorrect PIN</string>
     <!-- Countdown message shown after too many failed unlock attempts -->
     <plurals name="kg_too_many_failed_attempts_countdown">
         <item quantity="one">Try again in 1 second.</item>
@@ -169,7 +169,7 @@
     <!-- Instructions for disabling eSIM carrier to unlock the phone with embedded SIM. This message follows the original SIM PIN/PUK message of device without embedded SIM. -->
     <string name="kg_sim_lock_esim_instructions"><xliff:g id="previous_msg" example="Enter SIM PIN.">%1$s</xliff:g> Disable eSIM to use device without mobile service.</string>
     <!-- Instructions for using the PIN unlock screen -->
-    <string name="kg_pin_instructions">Enter PIN</string>
+    <string name="kg_pin_instructions">ENTER PIN</string>
     <!-- Instructions for using the password unlock screen -->
     <string name="kg_password_instructions">Enter Password</string>
     <!-- Hint shown in the PUK screen that asks the user to enter the PUK code given to them by their provider -->

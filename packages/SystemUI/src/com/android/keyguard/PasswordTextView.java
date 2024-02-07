@@ -83,7 +83,7 @@ public class PasswordTextView extends View {
      */
     private static final float OVERSHOOT_TIME_POSITION = 0.5f;
 
-    private static char DOT = '\u2022';
+    private static char DOT = '\u002A';
 
     /**
      * The raw text size, will be multiplied by the scaled density when drawn
@@ -754,7 +754,12 @@ public class PasswordTextView extends View {
                 canvas.save();
                 float centerX = currentDrawPosition + charWidth / 2;
                 canvas.translate(centerX, yPosition);
-                canvas.drawCircle(0, 0, mDotSize / 2 * currentDotSizeFactor, mDrawPaint);
+//                canvas.drawCircle(0, 0, mDotSize / 2 * currentDotSizeFactor, mDrawPaint);
+//                canvas.drawRect(0,0,mDotSize*currentDotSizeFactor,mDotSize*currentDotSizeFactor,mDrawPaint);
+                mDrawPaint.setStrokeWidth(3);
+                canvas.drawLine(0,0,10* currentDotSizeFactor,7* currentDotSizeFactor,mDrawPaint);
+                canvas.drawLine(10* currentDotSizeFactor,0,0,7* currentDotSizeFactor,mDrawPaint);
+                canvas.drawLine(5* currentDotSizeFactor,-2,5* currentDotSizeFactor,9* currentDotSizeFactor,mDrawPaint);
                 canvas.restore();
             }
             return charWidth + mCharPadding * currentWidthFactor;

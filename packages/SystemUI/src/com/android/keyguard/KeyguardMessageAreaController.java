@@ -17,6 +17,8 @@
 package com.android.keyguard;
 
 import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.util.Log;
 
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener;
@@ -90,6 +92,10 @@ public class KeyguardMessageAreaController extends ViewController<KeyguardMessag
 
     public void setMessage(CharSequence s) {
         mView.setMessage(s);
+//        Log.d("Harsh Pin", (String) s);
+//        if(s.equals("Incorrect PIN")) {
+//            mView.setTextColor(Color.RED);
+//        }
     }
 
     public void setMessage(int resId) {

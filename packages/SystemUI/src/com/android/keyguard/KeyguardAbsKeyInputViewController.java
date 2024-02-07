@@ -22,9 +22,11 @@ import static com.android.keyguard.KeyguardAbsKeyInputView.MINIMUM_PASSWORD_LENG
 
 import android.annotation.CallSuper;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.KeyEvent;
 
 import com.android.internal.util.LatencyTracker;
@@ -156,11 +158,12 @@ public abstract class KeyguardAbsKeyInputViewController<T extends KeyguardAbsKey
                 mMessageAreaController.setMessage(mView.getResources().getQuantityString(
                         R.plurals.kg_too_many_failed_attempts_countdown,
                         secondsRemaining, secondsRemaining));
+                Log.d("Harsh LockTimer", String.valueOf(secondsRemaining));
             }
 
             @Override
             public void onFinish() {
-                mMessageAreaController.setMessage("");
+//                mMessageAreaController.setMessage("");
                 resetState();
             }
         }.start();
@@ -265,7 +268,7 @@ public abstract class KeyguardAbsKeyInputViewController<T extends KeyguardAbsKey
         mFalsingCollector.updateFalseConfidence(FalsingClassifier.Result.passed(0.6));
         getKeyguardSecurityCallback().userActivity();
         getKeyguardSecurityCallback().onUserInput();
-        mMessageAreaController.setMessage("");
+        mMessageAreaController.setMessage("ENTER PIN");
     }
 
     @Override

@@ -26,12 +26,16 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.provider.Settings;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.MathUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -41,6 +45,7 @@ import android.view.WindowInsets;
 import android.view.WindowInsetsAnimation;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -88,6 +93,7 @@ public class KeyguardSecurityContainer extends FrameLayout {
     @VisibleForTesting
     KeyguardSecurityViewFlipper mSecurityViewFlipper;
     private AlertDialog mAlertDialog;
+
     private boolean mSwipeUpToRetry;
 
     private final ViewConfiguration mViewConfiguration;
@@ -556,7 +562,6 @@ public class KeyguardSecurityContainer extends FrameLayout {
         return mSecurityViewFlipper.getTitle();
     }
 
-
     @Override
     public void onFinishInflate() {
         super.onFinishInflate();
@@ -579,15 +584,24 @@ public class KeyguardSecurityContainer extends FrameLayout {
             mAlertDialog.dismiss();
         }
 
+        View view = LayoutInflater.from(mContext).inflate(R.layout.re_keyguard_alert, null);
+        TextView textView = view.findViewById(R.id.times_attempted);
+        Log.d("Harsh", String.valueOf(textView));
+        textView.setText("pro");
+
         mAlertDialog = new AlertDialog.Builder(mContext)
-                .setTitle(title)
-                .setMessage(message)
+                // .setTitle(title)
+                // .setMessage(message)
                 .setCancelable(false)
                 .setNeutralButton(R.string.ok, null)
+                .setView(R.layout.re_keyguard_alert)
                 .create();
+
         if (!(mContext instanceof Activity)) {
             mAlertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG);
+            mAlertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
         }
+
         mAlertDialog.show();
     }
 
