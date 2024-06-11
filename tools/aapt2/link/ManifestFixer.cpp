@@ -18,9 +18,9 @@
 
 #include <unordered_set>
 
-#include "android-base/logging.h"
-
 #include "ResourceUtils.h"
+#include "android-base/logging.h"
+#include "process/SymbolTable.h"
 #include "trace/TraceBuffer.h"
 #include "util/Util.h"
 #include "xml/XmlActionExecutor.h"
@@ -83,6 +83,58 @@ static bool RequiredNameIsJavaClassName(xml::Element* el, SourcePathDiagnostics*
     return false;
   }
   return NameIsJavaClassName(el, attr, diag);
+}
+
+static bool UpdateConfigChangesIfNeeded(xml::Element* el, IAaptContext* context) {
+  xml::Attribute* attr = el->FindAttribute(xml::kSchemaAndroid, "configChanges");
+  if (attr == nullptr) {
+    return true;
+  }
+
+  if (attr->value != "allKnown" && attr->value.find("allKnown") != std::string::npos) {
+    context->GetDiagnostics()->Error(
+        DiagMessage(el->line_number)
+        << "If you want to declare 'allKnown' in attribute 'android:configChanges' in <" << el->name
+        << ">, " << attr->value << " is not allowed', allKnown has to be used "
+        << "by itself, for example: 'android:configChanges=allKnown', it cannot be combined with "
+        << "the other flags");
+    return false;
+  }
+
+  if (attr->value == "allKnown") {
+    SymbolTable* symbol_table = context->GetExternalSymbols();
+    const SymbolTable::Symbol* symbol =
+        symbol_table->FindByName(ResourceName("android", ResourceType::kAttr, "configChanges"));
+
+    if (symbol == nullptr) {
+      context->GetDiagnostics()->Error(
+          DiagMessage(el->line_number)
+          << "Cannot find symbol for android:configChanges with min sdk: "
+          << context->GetMinSdkVersion());
+    }
+
+    std::stringstream new_value;
+
+    const auto& symbols = symbol->attribute->symbols;
+    for (auto it = symbols.begin(); it != symbols.end(); ++it) {
+      // Skip 'resourcesUnused' which is the flag to fully disable activity restart specifically
+      // for games.
+      if (it->symbol.name.value().entry == "resourcesUnused") {
+        continue;
+      }
+      if (it != symbols.begin()) {
+        new_value << "|";
+      }
+      new_value << it->symbol.name.value().entry;
+    }
+    const auto& old_value = attr->value;
+    auto new_value_str = new_value.str();
+    context->GetDiagnostics()->Note(DiagMessage(el->line_number)
+                                    << "Updating value of 'android:configChanges' from "
+                                    << old_value << " to " << new_value_str);
+    attr->value = std::move(new_value_str);
+  }
+  return true;
 }
 
 static bool RequiredNameIsJavaPackage(xml::Element* el, SourcePathDiagnostics* diag) {
@@ -294,9 +346,9 @@ static void EnsureNamespaceIsDeclared(const std::string& prefix, const std::stri
   }
 }
 
-bool ManifestFixer::BuildRules(xml::XmlActionExecutor* executor,
-                               IDiagnostics* diag) {
+bool ManifestFixer::BuildRules(xml::XmlActionExecutor* executor, IAaptContext* context) {
   // First verify some options.
+  IDiagnostics* diag = context->GetDiagnostics();
   if (options_.rename_manifest_package) {
     if (!util::IsJavaPackageName(options_.rename_manifest_package.value())) {
       diag->Error(DiagMessage() << "invalid manifest package override '"
@@ -346,6 +398,8 @@ bool ManifestFixer::BuildRules(xml::XmlActionExecutor* executor,
   // Common component actions.
   xml::XmlNodeAction component_action;
   component_action.Action(RequiredNameIsJavaClassName);
+  component_action.Action(
+      [context](xml::Element* el) -> bool { return UpdateConfigChangesIfNeeded(el, context); });
   component_action["intent-filter"] = intent_filter_action;
   component_action["preferred"] = intent_filter_action;
   component_action["meta-data"] = meta_data_action;
@@ -661,7 +715,7 @@ bool ManifestFixer::Consume(IAaptContext* context, xml::XmlResource* doc) {
   }
 
   xml::XmlActionExecutor executor;
-  if (!BuildRules(&executor, context->GetDiagnostics())) {
+  if (!BuildRules(&executor, context)) {
     return false;
   }
 

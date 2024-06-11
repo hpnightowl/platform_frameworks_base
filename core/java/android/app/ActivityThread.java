@@ -29,6 +29,7 @@ import static android.app.servertransaction.ActivityLifecycleItem.ON_STOP;
 import static android.app.servertransaction.ActivityLifecycleItem.PRE_ON_CREATE;
 import static android.content.ContentResolver.DEPRECATE_DATA_COLUMNS;
 import static android.content.ContentResolver.DEPRECATE_DATA_PREFIX;
+import static android.content.pm.ActivityInfo.CONFIG_RESOURCES_UNUSED;
 import static android.view.Display.DEFAULT_DISPLAY;
 import static android.view.Display.INVALID_DISPLAY;
 import static android.window.ConfigurationHelper.freeTextLayoutCachesIfNeeded;
@@ -5946,6 +5947,12 @@ public final class ActivityThread extends ClientTransactionHandler
         if (publicDiff == 0) {
             return false;
         }
+
+        if ((handledConfigChanges & CONFIG_RESOURCES_UNUSED) != 0) {
+                // Report the change if activities claim they do not use resources at all.
+                return true;
+            }
+
         final int diffWithBucket = SizeConfigurationBuckets.filterDiff(publicDiff, currentConfig,
                 newConfig, sizeBuckets);
         // Compare to the diff which filter the change without crossing size buckets with
