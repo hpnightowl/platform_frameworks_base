@@ -1081,6 +1081,13 @@ public final class OverlayManagerService extends SystemService {
          * @param message message for any SecurityException
          */
         private int handleIncomingUser(final int userId, @NonNull final String message) {
+            if (!message.startsWith("get")) {
+                final int callingUid = Binder.getCallingUid();
+                Slog.i("AssetSeqTrace", "OMS." + message + " user=" + userId
+                        + " uid=" + callingUid + " pid=" + Binder.getCallingPid() + " pkg="
+                        + OverlayManagerService.this.getContext().getPackageManager()
+                                .getNameForUid(callingUid));
+            }
             return ActivityManager.handleIncomingUser(Binder.getCallingPid(),
                     Binder.getCallingUid(), userId, false, true, message, null);
         }
@@ -1373,6 +1380,8 @@ public final class OverlayManagerService extends SystemService {
         if (CollectionUtils.isEmpty(updatedTargets)) {
             return;
         }
+        Slog.i("AssetSeqTrace", "OMS.updateTargetPackagesLocked targets=" + updatedTargets
+                + " callers=" + android.os.Debug.getCallers(8));
         persistSettingsLocked();
         final SparseArray<ArraySet<String>> userTargets = groupTargetsByUserId(updatedTargets);
         for (int i = 0, n = userTargets.size(); i < n; i++) {

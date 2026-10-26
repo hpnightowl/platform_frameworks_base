@@ -17872,6 +17872,10 @@ public class ActivityManagerService extends IActivityManager.Stub
     public void scheduleApplicationInfoChanged(List<String> packageNames, int userId) {
         enforceCallingPermission(android.Manifest.permission.CHANGE_CONFIGURATION,
                 "scheduleApplicationInfoChanged()");
+        Slog.i("AssetSeqTrace", "AMS.scheduleApplicationInfoChanged pkgs=" + packageNames
+                + " user=" + userId + " framework=" + packageNames.contains("android")
+                + " callerUid=" + Binder.getCallingUid() + " callerPid=" + Binder.getCallingPid()
+                + " callers=" + Debug.getCallers(6));
 
         final long origId = Binder.clearCallingIdentity();
         try {

@@ -4468,6 +4468,13 @@ public class ActivityTaskManagerService extends IActivityTaskManager.Stub {
             boolean updateFrameworkRes) {
         synchronized (mGlobalLock) {
             final int assetSeq = increaseAssetConfigurationSeq();
+            final StringBuilder procNames = new StringBuilder();
+            for (int i = 0; i < processes.size(); i++) {
+                final WindowProcessController wpc = processes.get(i);
+                procNames.append(wpc.mName).append('/').append(wpc.getPid()).append(' ');
+            }
+            Slog.i("AssetSeqTrace", "ATMS.updateAssetConfiguration assetSeq=" + assetSeq
+                    + " frameworkRes=" + updateFrameworkRes + " procs=[" + procNames + "]");
 
             if (updateFrameworkRes) {
                 Configuration newConfig = new Configuration();
